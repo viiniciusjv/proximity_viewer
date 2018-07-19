@@ -1,0 +1,87 @@
+<html>
+
+<head>
+
+    <title>RT page sample</title>
+
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.21.2.js"></script>
+
+    <script>
+
+        var pubnub = new PubNub({
+            subscribeKey: "sub-c-ce0bcd12-8b8a-11e8-b601-f67fbeaec001",
+            publishKey: "pub-c-032845bf-bd96-46d1-adad-ef2da09b5139",
+            ssl: true
+        })
+
+        pubnub.addListener({
+
+            message: function (m) {
+
+                // handle message
+
+                var channelName = m.channel;
+
+                var channelGroup = m.subscription;
+
+                var pubTT = m.timetoken;
+
+                var msg = JSON.parse(m.message);
+
+                console.log("New Message!!", msg);
+
+                var newDiv = document.createElement('div')
+
+                var newStr = "** (" + msg.TeamName + ") " +
+
+                    msg.SourceMemberName + " moved within " +
+
+                    msg.MemberDistance + "km of " + msg.TargetMemberName;
+
+                newDiv.innerHTML = newStr
+
+                var oldDiv = document.getElementById('chatLog')
+
+                oldDiv.appendChild(newDiv)
+
+            },
+
+            presence: function (p) {
+
+                // handle presence
+
+            },
+
+            status: function (s) {
+
+                // handle status
+
+            }
+
+
+
+        });
+
+        console.log("Subscribing..");
+
+        pubnub.subscribe({
+            channels: ['proximityevents'],
+        });        
+
+    </script>
+
+</head>
+
+<body>
+
+    <h1>Proximity Monitor</h1>
+
+    <p>Proximity Events listed below.</p>
+
+    <div id="chatLog">
+
+    </div>
+
+</body>
+
+</html>
